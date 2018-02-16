@@ -7,7 +7,7 @@ import csv
 import ncbi_taxdump_utils 
 
 
-want_taxonomy = ['superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']
+want_taxonomy = ['superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain']
 
 def main():
     p = argparse.ArgumentParser()
@@ -36,9 +36,11 @@ def main():
         acc, taxid = row
         taxid = int(taxid)
 
-        row = taxfoo.get_lineage(taxid, want_taxonomy)
-        row.insert(0, taxid)
-        row.insert(0, acc)
+        lin_dict = taxfoo.get_lineage_as_dict(taxid, want_taxonomy)
+        row = [acc, taxid]
+        for rank in want_taxonomy:
+            name = lin_dict.get(rank, '')
+            row.append(name)
 
         w.writerow(row)
 
