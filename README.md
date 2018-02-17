@@ -1,10 +1,16 @@
-# Extracting lineages from NCBI for use with sourmash lca
+# Extracting taxonomic lineages from NCBI based on accessions
 
-Code in:
+This workflow is used to (among other things) create files for use with `sourmash lca index`, which creates LCA classification databases.  It starts by taking in a list of NCBI accession IDs, and ends with an output file format like so:
 
-https://github.com/dib-lab/2018-ncbi-lineages
+```
+accession,taxid,superkingdom,phylum,class,order,family,genus,species,strain
+AAAC01000001,191218,Bacteria,Firmicutes,Bacilli,Bacillales,Bacillaceae,Bacillus,Bacillus anthracis,
+AABL01000001,73239,Eukaryota,Apicomplexa,Aconoidasida,Haemosporida,Plasmodiidae,Plasmodium,Plasmodium yoelii,
+AABT01000001,285217,Eukaryota,Ascomycota,Eurotiomycetes,Eurotiales,Aspergillaceae,Aspergillus,Aspergillus terreus,
+AABF01000001,209882,Bacteria,Fusobacteria,Fusobacteriia,Fusobacteriales,Fusobacteriaceae,Fusobacterium,Fusobacterium nucleatum,
+```
 
-# Step 1: create a file with a list of accessions
+## Step 1: create a file with a list of accessions
 
 See, for example, `example.accessions.txt`, which contains a single accession: `NVAK01000095`. This file can be produced from a sourmash SBT using the `get-accessions-from-sbt.py` script -- e.g.,
 
@@ -21,7 +27,7 @@ KK041881.1 Staphylococcus aureus F77917 genomic scaffold adFHh-supercont1.1, who
 ```
 (The next step will ignore everything past the first field in each line.)
 
-# Step 2: build a mapping from accessions to taxid
+## Step 2: build a mapping from accessions to taxid
 
 Using the accession2taxid files available on the [NCBI FTP site](ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/), run `make-acc-taxid-mapping.py`:
 
@@ -35,7 +41,7 @@ This will produce a file `example.accessions.txt.taxid` which contains the acces
 NVAK01000095,1396
 ```
 
-# Step 3: extract full lineages from the NCBI taxdump
+## Step 3: extract full lineages from the NCBI taxdump
 
 Using the `names.dmp` and `nodes.dmp` files from the [NCBI taxdump zip](ftp://ftp.ncbi.nih.gov/pub/taxonomy//taxdmp.zip), run `make-lineage-csv.py`:
 
@@ -49,4 +55,21 @@ This will produce the final output file `example.lineage.csv` that is now a `sou
 ```
 accession,taxid,superkingdom,phylum,class,order,family,genus,species
 NVAK01000095,1396,Bacteria,Firmicutes,Bacilli,Bacillales,Bacillaceae,Bacillus,Bacillus cereus
+```
+
+## Appendix: downloading files from NCBI
+
+The following commands will put the necessary files from NCBI in the `genbank/` directory.
+
+```
+mkdir genbank/
+
+cd genbank/
+
+curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy//taxdmp.zip
+unzip taxdmp.zip nodes.dmp names.dmp
+rm taxdmp.zip
+
+curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz
+curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz
 ```
