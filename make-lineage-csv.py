@@ -31,6 +31,7 @@ def main():
 
     count = 0
     for row in r:
+        if not row: continue
         count += 1
 
         acc, taxid = row
