@@ -23,6 +23,8 @@ def main():
         # & output!
         args.output.write('{}\n'.format(name))
 
+    print('got accessions from {} signatures'.format(n + 1))
+
 
 if __name__ == '__main__':
     main()
