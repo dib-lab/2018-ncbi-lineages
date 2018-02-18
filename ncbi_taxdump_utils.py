@@ -13,7 +13,7 @@ names_mem_cache = {}
 nodes_mem_cache = {}
 
 
-want_taxonomy = ['superkingdom', 'phylum', 'order', 'class', 'family', 'genus', 'species']
+default_want_taxonomy = ['superkingdom', 'phylum', 'order', 'class', 'family', 'genus', 'species']
 
 
 class NCBI_TaxonomyFoo(object):
@@ -109,6 +109,14 @@ class NCBI_TaxonomyFoo(object):
             return path[-1]
         return 1
 
+    def is_strain(self, taxid):
+        if self.get_taxid_rank(taxid) == 'no rank':
+            parent = self.get_taxid_parent(taxid)
+            if self.get_taxid_rank(parent) == 'species':
+                return True
+        return False
+
+
     def get_taxid_name(self, taxid):
         if taxid not in self.node_to_info:
             return None
@@ -157,6 +165,8 @@ class NCBI_TaxonomyFoo(object):
                 break
             rank = self.get_taxid_rank(taxid)
             name = self.get_taxid_name(taxid)
+            if self.is_strain(taxid): # NCBI reports strain as 'no rank'...
+                rank = 'strain'
             if not want_taxonomy or rank in want_taxonomy:
                 lineage.insert(0, name)
             taxid = self.get_taxid_parent(taxid)
@@ -178,8 +188,12 @@ class NCBI_TaxonomyFoo(object):
             if taxid not in self.node_to_info:
                 print('cannot find taxid {}; quitting.'.format(taxid))
                 break
+
             rank = self.get_taxid_rank(taxid)
             name = self.get_taxid_name(taxid)
+
+            if self.is_strain(taxid): # NCBI reports strain as 'no rank'...
+                rank = 'strain'
             if not want_taxonomy or rank in want_taxonomy:
                 lineage[rank] = name
             taxid = self.get_taxid_parent(taxid)
