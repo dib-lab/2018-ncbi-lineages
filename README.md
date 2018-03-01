@@ -149,8 +149,7 @@ Although you can grab the accession from the first line of each fasta file, this
 Download an assembly and get a list of accessions (one, since only one assembly):
 
 ```
-curl -L -o podar-genomes.tar.gz https://osf.io/8uxj9/download
-curl -L -o olive-genome.fa.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/742/605/GCA_002742605.1_O_europaea_v1/GCA_002742605.1_O_europaea_v1_genomic.fna.gz
+curl -L -O ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/742/605/GCA_002742605.1_O_europaea_v1/GCA_002742605.1_O_europaea_v1_genomic.fna.gz
 gunzip -c GCA_002742605.1_O_europaea_v1_genomic.fna.gz | head -1 | grep ^'>' | cut -c 2- > oe.acc
 ```
 
