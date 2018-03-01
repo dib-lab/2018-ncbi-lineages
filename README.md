@@ -101,22 +101,6 @@ curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession
 curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz
 ```
 
-If you are using genbank assemblies instead of raw reads, you need to download assembly accession info instead, and parse to create an accession2taxid.gz file
-
-```
-cd genbank
-curl -L -O https://ftp.ncbi.nih.gov/genomes/genbank/assembly_summary_genbank.txt
-gzip assembly_summary_genbank.txt
-cd .. 
-python make_assembly_acc2taxid.py -o genbank/genbank_assemblies -a assembly_summary_genbank.txt.gz
-```
-
-This should create genbank_assemblies_parsed_acc2taxid.txt. Then proceed to extracting taxids that correspond to your samples, as above:
-
-```
-python make-acc-taxid-mapping.py pg.acc genbank/genbank_assemblies_parsed_acc2taxid.txt
-```
-
 
 
 ## Appendix 2: extracting accessions from a sourmash SBT
@@ -156,6 +140,37 @@ sourmash lca index podar-lineage.csv podar.lca.json {?,??}.fa.sig -C 3 --split-i
 ```
 
 Tada!
+
+
+### Appendix 4: Using Genbank GCA accession instead for assemblies 
+
+Although you can grab the accession from the first line of each fasta file, this is particularly useful if you have the GCA accession handy (e.g. in filenames or with snakemake workflows)
+
+Download an assembly and get a list of accessions (one, since only one assembly):
+
+```
+curl -L -o podar-genomes.tar.gz https://osf.io/8uxj9/download
+curl -L -o olive-genome.fa.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/742/605/GCA_002742605.1_O_europaea_v1/GCA_002742605.1_O_europaea_v1_genomic.fna.gz
+gunzip -c GCA_002742605.1_O_europaea_v1_genomic.fna.gz | head -1 | grep ^'>' | cut -c 2- > oe.acc
+```
+
+Download genbank assembly accession info and parse to create an accession2taxid file
+
+```
+mkdir -p genbank
+cd genbank
+curl -L -O https://ftp.ncbi.nih.gov/genomes/genbank/assembly_summary_genbank.txt
+gzip assembly_summary_genbank.txt
+cd .. 
+python make_assembly_acc2taxid.py -o genbank/genbank_assemblies -a genbank/assembly_summary_genbank.txt.gz
+```
+
+This should create genbank_assemblies_parsed_acc2taxid.txt. Then proceed to extracting taxids that correspond to your samples, as above:
+
+```
+python make-acc-taxid-mapping.py olive.acc genbank/genbank_assemblies_parsed_acc2taxid.txt
+```
+
 
 ---
 
