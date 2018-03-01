@@ -150,7 +150,7 @@ Download an assembly and get a list of accessions (one, since only one assembly)
 
 ```
 curl -L -O ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/742/605/GCA_002742605.1_O_europaea_v1/GCA_002742605.1_O_europaea_v1_genomic.fna.gz
-gunzip -c GCA_002742605.1_O_europaea_v1_genomic.fna.gz | head -1 | grep ^'>' | cut -c 2- > oe.acc
+ls *_genomic.fna.gz | awk -F. '{print $1}' > oe.acc
 ```
 
 Download genbank assembly accession info and parse to create an accession2taxid file
