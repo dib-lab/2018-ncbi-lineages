@@ -25,7 +25,7 @@ head -1 {?,??}.fa | grep ^'>' | cut -c 2- > pg.acc
 
 Extract taxids (see appendix to get the `nucl_*.gz` files):
 ```
-./make-acc-taxid-mapping.py pg.acc nucl_{gb,wgs}*.gz
+./make-acc-taxid-mapping.py pg.acc genbank/nucl_{gb,wgs}*.gz
 ```
 
 Build the lineage CSV:
@@ -100,6 +100,24 @@ rm taxdmp.zip
 curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz
 curl -L -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz
 ```
+
+If you are using genbank assemblies instead of raw reads, you need to download assembly accession info instead, and parse to create an accession2taxid.gz file
+
+```
+cd genbank
+curl -L -O https://ftp.ncbi.nih.gov/genomes/genbank/assembly_summary_genbank.txt
+gzip assembly_summary_genbank.txt
+cd .. 
+python make_assembly_acc2taxid.py -o genbank/genbank_assemblies -a assembly_summary_genbank.txt.gz
+```
+
+This should create genbank_assemblies_parsed_acc2taxid.txt. Then proceed to extracting taxids that correspond to your samples, as above:
+
+```
+python make-acc-taxid-mapping.py pg.acc genbank/genbank_assemblies_parsed_acc2taxid.txt
+```
+
+
 
 ## Appendix 2: extracting accessions from a sourmash SBT
 
