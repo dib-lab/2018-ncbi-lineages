@@ -1,3 +1,7 @@
+rule all:
+    input:
+        "example.accessions.lineages.csv"
+
 rule download_wgs_acc2taxid:
     output:
         "nucl_wgs.accession2taxid.gz"
@@ -15,7 +19,7 @@ rule download_taxdump:
         "taxdump/nodes.dmp",
         "taxdump/names.dmp"
     shell:
-        "curl -L ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz | (mkdir -p taxdump && cd taxdump && tar xzvf -"
+        "curl -L ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz | (mkdir -p taxdump && cd taxdump && tar xzvf -)"
 
 rule make_taxid:
     input:

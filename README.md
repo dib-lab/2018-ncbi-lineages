@@ -10,6 +10,18 @@ AABT01000001,285217,Eukaryota,Ascomycota,Eurotiomycetes,Eurotiales,Aspergillacea
 AABF01000001,209882,Bacteria,Fusobacteria,Fusobacteriia,Fusobacteriales,Fusobacteriaceae,Fusobacterium,Fusobacterium nucleatum,
 ```
 
+### Snakestart: a snakemake workflow
+
+Install snakemake, and run it:
+
+```snakemake```
+
+This will generate an output file `example.accessions.lineages.csv` based
+on the input file `example.accessions.txt`. If you want to run it on your
+own data, put a list of nucleotide accessions in a file `name.txt` and
+run `snakemake name.lineages.csv` and it should all work. Note that snakemake
+will download all of the necessary support files too!
+
 ### Quickstart: an example workflow
 
 Get a list of accessions from a pile o' genbank genomes; here, we are using [sourmash](http://sourmash.readthedocs.io) to prepare an SBT and LCA database for further work, but you can do this without sourmash - all you need is the list of accessions.
