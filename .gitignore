@@ -1,2 +1,6 @@
 *~
 __pycache__
+nucl_gb.accession2taxid.gz
+nucl_wgs.accession2taxid.gz
+taxdump/
+.snakemake

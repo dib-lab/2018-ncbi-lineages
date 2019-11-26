@@ -33,8 +33,9 @@ def main():
             for n, line in enumerate(fp):
                 if not acc_set: break
 
-                if n and n % 100000 == 0:
-                    print('...', n, m, filename)
+                if n and n % 1000000 == 0:
+                    print(u'\r\033[K', end=u'')
+                    print('... read {} lines of {}; found {} of {}'.format(n, filename, m, m + len(acc_set)), end='\r')
 
                 try:
                     acc, _, taxid, _ = line.split()
@@ -47,8 +48,15 @@ def main():
                     outfp.write('{},{}\n'.format(acc, taxid))
                     acc_set.remove(acc)
 
+                    if not acc_set:
+                        break
+
+    print("\n")
+
     if acc_set:
         print('failed to find {} acc'.format(len(acc_set)))
+    else:
+        print('found all {} accessions!'.format(m))
 
     print('output taxid file is in', args.acc_file + '.taxid')
 
