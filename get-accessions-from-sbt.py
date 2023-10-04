@@ -3,7 +3,7 @@ from __future__ import print_function
 import sys
 import argparse
 import csv
-import sourmash_lib
+import sourmash
 
 
 def main():
@@ -12,13 +12,13 @@ def main():
     p.add_argument('-o', '--output', type=argparse.FileType('wt'))
     args = p.parse_args()
 
-    db = sourmash_lib.load_sbt_index(args.sbt)
+    db = sourmash.load_file_as_index(args.sbt)
 
     for n, leaf in enumerate(db.leaves()):
         if n % 1000 == 0:
             print('... at leaf', n)
 
-        name = leaf.data.name()
+        name = leaf.data.name
 
         # & output!
         args.output.write('{}\n'.format(name))
