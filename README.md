@@ -1,5 +1,7 @@
 # Extracting taxonomic lineages from NCBI based on accessions
 
+**NOTE:** We've switched to https://github.com/ctb/2022-assembly-summary-to-lineages over in sourmash land!
+
 These tools are used to (among other things) create files for use with `sourmash lca index`, which creates LCA classification databases.  It starts by taking in a list of NCBI accession IDs, and ends with an output file format like so:
 
 ```
